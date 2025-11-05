@@ -27,3 +27,10 @@ impl Solution {
 
 // Runtime: 0 ms, Beats 100.00%
 // Memory: 2.78 MB, Beats 98.36%
+
+/* pseudo-one-liner
+head.and_then(|mut node| {
+    node.next = Self::remove_elements(node.next, val);
+    if node.val == val {node.next} else {Some(node)}
+})
+*/
