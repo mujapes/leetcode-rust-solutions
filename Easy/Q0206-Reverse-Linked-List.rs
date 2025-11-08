@@ -30,3 +30,9 @@ impl Solution {
 
 // Runtime: 0 ms, Beats 100.00%
 // Memory: 2.49 MB, Beats 84.44%
+
+/* pseudo-one-liner:
+std::iter::from_fn(move || {
+    head.take().map(|mut node| {head = node.next.take(); node})
+}).reduce(|mut list, mut node| {node.next = Some(list); node})
+*/
