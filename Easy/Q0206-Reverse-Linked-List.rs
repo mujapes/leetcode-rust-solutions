@@ -31,12 +31,10 @@ impl Solution {
 // Runtime: 0 ms, Beats 100.00%
 // Memory: 2.49 MB, Beats 84.44%
 
-/* alternative:
+/* 1 line shorter alternative:
 std::iter::from_fn(move || {
-    head.take().map(|mut node| {
-        head = node.next.take();
-        node
-    })
+    let next = head.as_mut().and_then(|node| node.next.take());
+    std::mem::replace(&mut head, next)
 }).reduce(|mut list, mut node| {
     node.next = Some(list);
     node
