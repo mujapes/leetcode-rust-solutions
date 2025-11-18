@@ -36,3 +36,14 @@ impl Solution {
 
 // Runtime: 0ms, Beats 100.00%
 // Memory: 2.11 MB, Beats 69.50%
+
+/* shorter solution:
+root.map(|node| {
+    {
+        let mut cur = node.borrow_mut();
+        let right = Self::invert_tree(cur.left.take());
+        cur.left = Self::invert_tree(std::mem::replace(&mut cur.right, right));
+    }
+    node
+})
+\*/
