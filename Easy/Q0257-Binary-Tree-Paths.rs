@@ -23,13 +23,18 @@ impl Solution {
         let Some(node) = &root else {return vec![]};
         let cur = node.borrow();
         if let (None, None) = (&cur.left, &cur.right) {return vec![cur.val.to_string()]}
-        Self::binary_tree_paths(cur.left.clone())
-            .into_iter()
-            .chain(Self::binary_tree_paths(cur.right.clone()).into_iter())
+        match cur.left {
+                None => Vec::new(),
+                _ => Self::binary_tree_paths(cur.left.clone())
+            }.into_iter()
+            .chain(match cur.right {
+                None => Vec::new(),
+                _ => Self::binary_tree_paths(cur.right.clone())
+            }.into_iter())
             .map(|s| format!("{}->{}", cur.val, s))
             .collect()
     }
 }
 
 // Runtime: 0 ms, Beats 100.00%
-// Memory: 2.18 MB, Beats 100.00%
+// Memory: 2.10 MB, Beats 100.00%
