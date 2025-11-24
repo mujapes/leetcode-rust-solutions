@@ -6,7 +6,7 @@ use std::cmp::max;
 
 impl Solution {
     pub fn first_bad_version(&self, n: i32) -> i32 {
-		    successors(Some(n.saturating_add(1)/2), |gap| match gap {
+		successors(Some(n.saturating_add(1)/2), |gap| match gap {
             0 => None,
             1 => Some(0),
             _ => Some((gap + 1)/2)
