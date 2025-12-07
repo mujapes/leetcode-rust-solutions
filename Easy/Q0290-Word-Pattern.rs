@@ -1,18 +1,18 @@
 impl Solution {
     pub fn word_pattern(pattern: String, s: String) -> bool {
         let mut seen = [""; 26];
-        let pattern_b = pattern.as_bytes();
-        let mut wrd_cnt = 0;
-        s.split_whitespace()
-            .enumerate()
-            .fold(true, |ok, (i, word)| { wrd_cnt += 1; ok && i < pattern.len() && match seen {
-                seen if seen[pattern_b[i] as usize - 97] == word => true,
-                ref mut seen if (*seen)[pattern_b[i] as usize - 97].is_empty() && !(*seen).contains(&word) => {
-                    (*seen)[pattern_b[i] as usize - 97] = word;
-                    true
-                },
-                _ => false
-            } } ) && wrd_cnt == pattern.len()
+        let mut letters = pattern.as_bytes().iter();
+        let mut words = s.split_whitespace();
+        for ltr in letters {
+            if let Some(word) = words.next() {
+                if seen[*ltr as usize - 97].is_empty() && !seen.contains(&word) {
+                    seen[*ltr as usize - 97] = word;
+                }
+                if seen[*ltr as usize - 97] != word {return false}
+            } else {return false}
+        }
+        if let Some(_) = words.next() {return false}
+        true
     }
 }
 
