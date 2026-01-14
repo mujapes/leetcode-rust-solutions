@@ -10,8 +10,8 @@ impl Solution {
                     break res.chars().rev().collect()
                 },
                 (next1, next2) => {
-                    let sum = next1.unwrap_or('0') as u8 + next2.unwrap_or('0') as u8 + r - 96;
-                    res.push((sum % 10 + 48) as char);
+                    let sum = next1.unwrap_or('0') as u8 + next2.unwrap_or('0') as u8 + r - b'0' - b'0';
+                    res.push((sum % 10 + b'0') as char);
                     r = if sum < 10 {0} else {1};
                 }
             }
