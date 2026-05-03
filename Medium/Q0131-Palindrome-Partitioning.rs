@@ -1,6 +1,3 @@
-use std::collections::HashSet;
-
-
 impl Solution {
     pub fn partition(s: String) -> Vec<Vec<String>> {
         // find non-trivial palindromes then recursively combine with all others
@@ -10,15 +7,15 @@ impl Solution {
         // collapes bounds into one number
         
         // array of single chars then 
-        let mut parts: HashSet<Vec<String>> = HashSet::new();
+        let mut parts: Vec<Vec<String>> = Vec::new();
         let mut trivial = Vec::with_capacity(s.len());
 
         for c in s.chars() {
             trivial.push(c.to_string());
         }
         
-        fn recurse(part: Vec<String>, parts: &mut HashSet<Vec<String>>, unpartitioned_start: usize) {
-            parts.insert(part.clone());
+        fn recurse(part: Vec<String>, parts: &mut Vec<Vec<String>>, unpartitioned_start: usize) {
+            parts.push(part.clone());
             for i in unpartitioned_start..part.len()-1 {
                 // 2 element palindrom builder
                 if part[i].len() == 1 && part[i+1] == part[i] {
@@ -46,5 +43,5 @@ impl Solution {
     }
 }
 
-// Runtime: 65 ms, Beats 6.25%
-// Memory: 20.89 MB, Beats 4.17%
+// Runtime: 30 ms, Beats 6.25%
+// Memory: 20.33 MB, Beats 100.00%
