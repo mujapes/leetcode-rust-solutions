@@ -42,10 +42,12 @@ impl LRUCache {
     
     fn get(&mut self, key: i32) -> i32 {
         let Some(cur_node) = self.data.get_mut(&key) else { return -1 };
+        if cur_node.newer == None { return cur_node.value; }
         let cur_value = cur_node.value;
         let cur_newer = cur_node.newer;
         let cur_older = cur_node.older;
 
+        if self.oldest.unwrap() == key { self.oldest = cur_newer; }
         cur_node.newer = None;
         cur_node.older = self.newest;
 
@@ -73,38 +75,44 @@ impl LRUCache {
     }
     
     fn put(&mut self, key: i32, value: i32) {
-        self.data.insert(
-            key, 
-            DoublyLinkedNode {
-                value,
-                newer: None,
-                older: self.newest
+        if self.get(key) == -1 {
+            self.data.insert(
+                key, 
+                DoublyLinkedNode {
+                    value,
+                    newer: None,
+                    older: self.newest
+                }
+            );
+
+            if let Some(next_newest_key) = self.newest {
+                self.data
+                    .get_mut(&next_newest_key)
+                    .unwrap()
+                    .newer = Some(key);
             }
-        );
-        if let Some(next_newest_key) = self.newest {
-            self.data
-                .get_mut(&next_newest_key)
-                .unwrap()
-                .newer = Some(key);
-        }
-        self.newest = Some(key);
+            self.newest = Some(key);
 
-        if self.len == self.capacity {
-            let next_oldest = self.data
-                .get(&self.oldest.unwrap())
-                .unwrap()
-                .newer;
+            if self.len == self.capacity {
+                let next_oldest = self.data
+                    .get(&self.oldest.unwrap())
+                    .unwrap()
+                    .newer;
 
-            self.data.remove(&self.oldest.unwrap());
-            self.oldest = next_oldest;
+                self.data.remove(&self.oldest.unwrap());
+                self.oldest = next_oldest;
 
-            self.data
-                .get_mut(&next_oldest.unwrap())
-                .unwrap()
-                .older = None;
+                self.data
+                    .get_mut(&next_oldest.unwrap())
+                    .unwrap()
+                    .older = None;
+            } else {
+                if self.len == 0 { self.oldest = Some(key); }
+                self.len += 1;
+            }
         } else {
-            if self.len == 0 { self.oldest = Some(key); }
-            self.len += 1;
+            (*self.data.get_mut(&key).unwrap())
+                .value = value;
         }
     }
 }
@@ -115,3 +123,6 @@ impl LRUCache {
  * let ret_1: i32 = obj.get(key);
  * obj.put(key, value);
  */
+
+// Runtime: 56 ms, Beats 40.73%
+// Memory: 103.89 MB, Beats 68.55%
